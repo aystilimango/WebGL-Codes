@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Simple WebGL Project</title>
+	
+	<script id="vertex-shaderRect" type="x-shader/x-vertex">
+	  
+	  attribute vec4 vPositionRect;
+	  void main(){
+	    
+		gl_Position=vPositionRect;
+		
+	  }
+	</script>
+	
+	
+	<script id="fragment-shaderRect" type="x-shader/x-fragment">
+	  precision mediump float;
+	  void main(){
+	    gl_FragColor = vec4( 0, 0, 0, 1 );
+		
+	  }
+	</script>
+    <script id="vertex-shaderTri" type="x-shader/x-vertex">
+	  attribute vec4 vPosition;
+	 
+	  void main(){
+	    gl_Position = vPosition;
+	  }
+	</script>
+	
+	
+	<script id="fragment-shaderTri" type="x-shader/x-fragment">
+	  precision mediump float;
+	  void main(){
+	    gl_FragColor = vec4( 0, 0.7, 1, 1 );
+		
+	  }
+	</script>
+	
+	<script type="text/javascript" src="16290048.js"></script>
+  </head>
+  <body>
+    <canvas id="glCanvas" style="border-style:Dashed" width="640" height="360">
+	  Your Browser Doesn't Support HTML5
+	</canvas>
+  </body>
+</html>
+
