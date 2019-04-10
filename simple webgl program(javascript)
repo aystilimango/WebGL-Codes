@@ -1,0 +1,149 @@
+var gl;
+//var points;
+
+window.onload = function init(){
+	var canvas = document.getElementById( "glCanvas" );
+	gl = canvas.getContext("webgl"); // WebGLUtils.setupWebGL( canvas );
+	if ( !gl ) { alert( "WebGL isn't available" ); }
+	
+	gl.viewport( 0, 0, canvas.width, canvas.height );
+	gl.clearColor( 1,1,1,1 );
+	
+	var verticesRectangle = new Float32Array([-0.7,0,-0.2,0,-0.2,0.4,-0.7,0.4])
+	
+	var vertElement = document.getElementById( "vertex-shaderRect" );
+	if ( !vertElement ) {
+		alert( "Unable to load the vertex shader!" );
+	  return -1;
+	}
+	else {
+	var	vertShader = gl.createShader( gl.VERTEX_SHADER );
+	  gl.shaderSource( vertShader, vertElement.text );
+	  gl.compileShader( vertShader );
+	  if ( !gl.getShaderParameter(vertShader, gl.COMPILE_STATUS) ) {
+			alert( "Vertex shader failed to compile!" );
+	    return -1;
+		}
+	}
+	
+	
+	var fragElement = document.getElementById( "fragment-shaderRect" );
+	if ( !fragElement ) {
+		alert( "Unable to load fragment shader!" );
+	  return -1;
+	}
+	else {
+	var	fragShader = gl.createShader( gl.FRAGMENT_SHADER );
+	  gl.shaderSource( fragShader, fragElement.text );
+	  gl.compileShader( fragShader );
+	  if ( !gl.getShaderParameter(fragShader, gl.COMPILE_STATUS) ) {
+			alert( "Fragment shader failed to compile!" );
+	    return -1;
+		}
+	}
+	
+	
+	var programRect = gl.createProgram();
+	gl.attachShader( programRect, vertShader );
+	gl.attachShader( programRect, fragShader );
+	gl.linkProgram( programRect );
+	
+	
+	if ( !gl.getProgramParameter(programRect, gl.LINK_STATUS) ) {
+		alert( "Shader program failed to link!" );
+		return -1;
+	}
+
+	gl.useProgram( programRect );
+	
+	var bufferRectID=gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER,bufferRectID);
+	gl.bufferData(gl.ARRAY_BUFFER,verticesRectangle,gl.STATIC_DRAW); 
+	
+	var vPositionRect = gl.getAttribLocation( programRect, "vPositionRect" );
+	gl.vertexAttribPointer( vPositionRect, 2, gl.FLOAT, false, 0, 0 );
+	gl.enableVertexAttribArray( vPositionRect );
+	
+	renderRect();
+	
+	Triangle();
+	
+	
+};
+
+function renderRect()
+{
+	gl.clear( gl.COLOR_BUFFER_BIT );
+	gl.drawArrays(gl.LINE_LOOP, 0, 4);
+}
+
+
+function Triangle()
+{
+	
+	var vertices = new Float32Array([ 0.5,0.7,0.2,-0.3,0.8,-0.3 ]);
+	//  Load, compile, and link shaders
+	var vertShdr;
+	var fragShdr;
+
+	var vertElem = document.getElementById( "vertex-shaderTri" );
+	if ( !vertElem ) {
+		alert( "Unable to load the vertex shader!" );
+	  return -1;
+	}
+	else {
+		vertShdr = gl.createShader( gl.VERTEX_SHADER );
+	  gl.shaderSource( vertShdr, vertElem.text );
+	  gl.compileShader( vertShdr );
+	  if ( !gl.getShaderParameter(vertShdr, gl.COMPILE_STATUS) ) {
+			alert( "Vertex shader failed to compile!" );
+	    return -1;
+		}
+	}
+
+	var fragElem = document.getElementById( "fragment-shaderTri" );
+	if ( !fragElem ) {
+		alert( "Unable to load fragment shader!" );
+	  return -1;
+	}
+	else {
+		fragShdr = gl.createShader( gl.FRAGMENT_SHADER );
+		gl.shaderSource( fragShdr, fragElem.text );
+		gl.compileShader( fragShdr );
+		if ( !gl.getShaderParameter(fragShdr, gl.COMPILE_STATUS) ) {
+			alert( "Fragment shader failed to compile!" );
+	    return -1;
+		}
+	}
+	var program = gl.createProgram();
+	gl.attachShader( program, vertShdr );
+	gl.attachShader( program, fragShdr );
+	gl.linkProgram( program );
+
+	if ( !gl.getProgramParameter(program, gl.LINK_STATUS) ) {
+		alert( "Shader program failed to link!" );
+		return -1;
+	}
+
+	gl.useProgram( program );
+
+	// Load the data into the GPU
+	var bufferId = gl.createBuffer();
+	gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
+	gl.bufferData( gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW );
+	
+
+	// Associate out shader variables with our data buffer
+	var vPosition = gl.getAttribLocation( program, "vPosition" );
+	gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+	gl.enableVertexAttribArray( vPosition );
+	renderTri();
+	
+}
+
+function renderTri() {
+   gl.drawArrays( gl.TRIANGLES, 0, 3 );
+}
+
+
+
